@@ -30,3 +30,6 @@ desktop.ini
 # ─── Logs ────────────────────────────────────────────────────
 *.log
 logs/
+
+# ─── Archivos académicos / locales ───────────────────────────
+GRASP_README.md

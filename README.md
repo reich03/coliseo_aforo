@@ -25,7 +25,7 @@
 - Maven 3.9+
 - Node.js 20+
 - Docker + Docker Compose
-- Arduino IDE (para el firmware)
+- Arduino IDE
 
 ## Inicio rápido (Docker)
 
@@ -33,7 +33,7 @@
 docker compose up --build
 ```
 
-El frontend queda disponible en http://localhost:5173  
+El frontend  en http://localhost:5173  
 Swagger de cada MS:
 - Aforo:    http://localhost:8081/swagger-ui.html
 - Eventos:  http://localhost:8082/swagger-ui.html
