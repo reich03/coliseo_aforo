@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: coliseo-postgres
+    environment:
+      POSTGRES_DB: coliseo
+      POSTGRES_USER: coliseo
+      POSTGRES_PASSWORD: coliseo123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coliseo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  gateway:
+    build: ./gateway
+    container_name: coliseo-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - aforo-ms
+      - eventos-ms
+      - reportes-ms
+      - usuarios-ms
+
+  aforo-ms:
+    build: ./aforo-ms
+    container_name: coliseo-aforo-ms
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/coliseo
+      SPRING_DATASOURCE_USERNAME: coliseo
+      SPRING_DATASOURCE_PASSWORD: coliseo123
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  eventos-ms:
+    build: ./eventos-ms
+    container_name: coliseo-eventos-ms
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/coliseo
+      SPRING_DATASOURCE_USERNAME: coliseo
+      SPRING_DATASOURCE_PASSWORD: coliseo123
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  reportes-ms:
+    build: ./reportes-ms
+    container_name: coliseo-reportes-ms
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/coliseo
+      SPRING_DATASOURCE_USERNAME: coliseo
+      SPRING_DATASOURCE_PASSWORD: coliseo123
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  usuarios-ms:
+    build: ./usuarios-ms
+    container_name: coliseo-usuarios-ms
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/coliseo
+      SPRING_DATASOURCE_USERNAME: coliseo
+      SPRING_DATASOURCE_PASSWORD: coliseo123
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build: ./aforo-dashboard
+    container_name: coliseo-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - gateway
+
+volumes:
+  postgres_data:

@@ -1,0 +1,48 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: aforo-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/aforo/**
+        - id: eventos-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/eventos/**
+        - id: reportes-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/reportes/**
+        - id: usuarios-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/usuarios/**
+        # WebSocket route para Aforo MS
+        - id: aforo-ws
+          uri: ws://localhost:8081
+          predicates:
+            - Path=/ws-aforo/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info

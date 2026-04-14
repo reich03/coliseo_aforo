@@ -1,0 +1,32 @@
+# ─── Maven / Java ───────────────────────────────────────────
+**/target/
+**/*.class
+**/*.jar
+!**/src/main/**/*.jar
+**/*.war
+**/*.ear
+**/.mvn/wrapper/maven-wrapper.jar
+**/hs_err_pid*.log
+
+# ─── Spring Boot ────────────────────────────────────────────
+**/application-local.yml
+**/application-secret.yml
+
+# ─── Node / React / Vite ────────────────────────────────────
+aforo-dashboard/node_modules/
+aforo-dashboard/dist/
+aforo-dashboard/.vite/
+aforo-dashboard/coverage/
+
+# ─── IDE / OS ────────────────────────────────────────────────
+.idea/
+**/.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs ────────────────────────────────────────────────────
+*.log
+logs/
