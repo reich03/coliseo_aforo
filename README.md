@@ -81,3 +81,13 @@ coliseo-aforo/
 â”œâ”€â”€ docker-compose.yml
 â””â”€â”€ README.md
 ```
+
+## Integrantes
+
+| Nombre | Código |
+|---|---|
+| Jhojan Andrés Grisales Mora | 160004814 |
+| Marlon Fabián Santofimio Romero | 160004837 |
+| Jessica Marcela Baquero Mejía | 160004303 |
+| Juan David Carrillo Rizo | 160004805 |
+| Oscar David Tibacuy Pabón | 160004839 |
