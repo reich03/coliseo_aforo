@@ -1,5 +1,7 @@
 package com.coliseo.reportes.infrastructure.export;
 
+import com.coliseo.reportes.application.port.ReporteExporterPort;
+import com.coliseo.reportes.application.port.ReportePdfData;
 import com.coliseo.reportes.domain.RegistroHistorico;
 import com.coliseo.reportes.domain.ResumenEvento;
 import org.apache.poi.ss.usermodel.*;
@@ -12,9 +14,13 @@ import java.util.List;
 
 
 @Component
-public class ExcelExporter {
+public class ExcelExporter implements ReporteExporterPort {
 
-    public byte[] exportar(ResumenEvento resumen, List<RegistroHistorico> historial) throws IOException {
+    @Override
+    public byte[] exportar(ReportePdfData data) throws IOException {
+        ResumenEvento resumen = data.getResumen();
+        List<RegistroHistorico> historial = data.getHistorial();
+
         try (Workbook wb = new XSSFWorkbook();
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
@@ -69,5 +75,10 @@ public class ExcelExporter {
             wb.write(baos);
             return baos.toByteArray();
         }
+    }
+
+    @Override
+    public String getFormat() {
+        return "XLSX";
     }
 }

@@ -1,10 +1,11 @@
 package com.coliseo.reportes.presentation;
 
 import com.coliseo.reportes.application.ReporteService;
+import com.coliseo.reportes.application.port.DefaultReportePdfData;
 import com.coliseo.reportes.domain.RegistroHistorico;
 import com.coliseo.reportes.domain.ResumenEvento;
 import com.coliseo.reportes.infrastructure.export.ExcelExporter;
-import com.coliseo.reportes.infrastructure.export.PdfExporter;
+import com.coliseo.reportes.infrastructure.export.JasperReporter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,14 +22,14 @@ import java.util.UUID;
 public class ReporteController {
 
     private final ReporteService reporteService;
-    private final PdfExporter pdfExporter;
+    private final JasperReporter jasperReporter;
     private final ExcelExporter excelExporter;
 
     public ReporteController(ReporteService reporteService,
-                              PdfExporter pdfExporter,
+                              JasperReporter jasperReporter,
                               ExcelExporter excelExporter) {
         this.reporteService = reporteService;
-        this.pdfExporter = pdfExporter;
+        this.jasperReporter = jasperReporter;
         this.excelExporter = excelExporter;
     }
 
@@ -47,10 +47,10 @@ public class ReporteController {
 
     @GetMapping("/evento/{eventoId}/pdf")
     @Operation(summary = "Descargar reporte en PDF")
-    public ResponseEntity<byte[]> pdf(@PathVariable UUID eventoId) throws IOException {
+    public ResponseEntity<byte[]> pdf(@PathVariable UUID eventoId) throws java.io.IOException {
         ResumenEvento resumen = reporteService.calcularResumen(eventoId);
         List<RegistroHistorico> historial = reporteService.obtenerHistorial(eventoId);
-        byte[] bytes = pdfExporter.exportar(resumen, historial);
+        byte[] bytes = jasperReporter.exportar(new DefaultReportePdfData(resumen, historial));
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + eventoId + ".pdf")
@@ -60,10 +60,10 @@ public class ReporteController {
 
     @GetMapping("/evento/{eventoId}/excel")
     @Operation(summary = "Descargar reporte en Excel")
-    public ResponseEntity<byte[]> excel(@PathVariable UUID eventoId) throws IOException {
+    public ResponseEntity<byte[]> excel(@PathVariable UUID eventoId) throws java.io.IOException {
         ResumenEvento resumen = reporteService.calcularResumen(eventoId);
         List<RegistroHistorico> historial = reporteService.obtenerHistorial(eventoId);
-        byte[] bytes = excelExporter.exportar(resumen, historial);
+        byte[] bytes = excelExporter.exportar(new DefaultReportePdfData(resumen, historial));
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + eventoId + ".xlsx")
