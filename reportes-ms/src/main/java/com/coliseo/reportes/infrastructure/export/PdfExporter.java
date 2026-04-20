@@ -1,5 +1,7 @@
 package com.coliseo.reportes.infrastructure.export;
 
+import com.coliseo.reportes.application.port.ReporteExporterPort;
+import com.coliseo.reportes.application.port.ReportePdfData;
 import com.coliseo.reportes.domain.RegistroHistorico;
 import com.coliseo.reportes.domain.ResumenEvento;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -16,9 +18,13 @@ import java.util.List;
 
 
 @Component
-public class PdfExporter {
+public class PdfExporter implements ReporteExporterPort {
 
-    public byte[] exportar(ResumenEvento resumen, List<RegistroHistorico> historial) throws IOException {
+    @Override
+    public byte[] exportar(ReportePdfData data) throws IOException {
+        ResumenEvento resumen = data.getResumen();
+        List<RegistroHistorico> historial = data.getHistorial();
+
         try (PDDocument doc = new PDDocument();
              ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 
@@ -86,7 +92,6 @@ public class PdfExporter {
                 // Filas
                 for (RegistroHistorico r : historial) {
                     if (y < 60) {
-                        cs.close();
                         PDPage newPage = new PDPage(PDRectangle.A4);
                         doc.addPage(newPage);
                         break;
@@ -105,5 +110,10 @@ public class PdfExporter {
             doc.save(baos);
             return baos.toByteArray();
         }
+    }
+
+    @Override
+    public String getFormat() {
+        return "PDF";
     }
 }

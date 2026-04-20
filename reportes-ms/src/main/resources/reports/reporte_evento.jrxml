@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="reporte_evento"
+              language="java"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="555"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20"
+              uuid="12345678-1234-1234-1234-123456789abc">
+
+	<parameter name="EVENTO_ID" class="java.lang.String"/>
+	<parameter name="EVENTO_NOMBRE" class="java.lang.String"/>
+	<parameter name="TOTAL_REGISTROS" class="java.lang.Integer"/>
+	<parameter name="PICO_MAXIMO" class="java.lang.Integer"/>
+	<parameter name="PORCENTAJE_PICO" class="java.lang.Float"/>
+	<parameter name="HORA_PICO" class="java.time.LocalDateTime"/>
+	<parameter name="SUBTITULO" class="java.lang.String"/>
+	<field name="timestamp" class="java.time.LocalDateTime"/>
+	<field name="personasAdentro" class="java.lang.Integer"/>
+	<field name="aforoMaximo" class="java.lang.Integer"/>
+	<field name="porcentaje" class="java.lang.Float"/>
+
+	<title>
+		<band height="74" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="555" height="24" uuid="12345678-1234-1234-1234-123456789abd"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Reporte de Aforo — Coliseo Álvaro Mesa Amaya]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="36" width="555" height="14" uuid="12345678-1234-1234-1234-123456789abe"/>
+				<textElement textAlignment="Center">
+					<font size="10" isItalic="true" pdfFontName="Helvetica-Oblique"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SUBTITULO}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="58" width="555" height="1" uuid="12345678-1234-1234-1234-123456789abf"/>
+			</line>
+		</band>
+	</title>
+
+	<pageHeader>
+		<band height="90" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="90" uuid="12345678-1234-1234-1234-123456789ac0"/>
+				<box>
+					<pen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement x="10" y="8" width="150" height="12" uuid="12345678-1234-1234-1234-123456789ac1"/>
+					<textElement><font size="10" isBold="true"/></textElement>
+					<text><![CDATA[Resumen del evento]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="10" y="26" width="255" height="12" uuid="12345678-1234-1234-1234-123456789ac2"/>
+					<textElement><font size="9"/></textElement>
+					<textFieldExpression><![CDATA["Evento ID: " + $P{EVENTO_ID}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="42" width="255" height="12" uuid="12345678-1234-1234-1234-123456789ac3"/>
+					<textElement><font size="9"/></textElement>
+					<textFieldExpression><![CDATA["Evento: " + $P{EVENTO_NOMBRE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="58" width="255" height="12" uuid="12345678-1234-1234-1234-123456789ac4"/>
+					<textElement><font size="9"/></textElement>
+					<textFieldExpression><![CDATA["Total registros: " + $P{TOTAL_REGISTROS}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="290" y="26" width="255" height="12" uuid="12345678-1234-1234-1234-123456789ac5"/>
+					<textElement><font size="9"/></textElement>
+					<textFieldExpression><![CDATA["Pico máximo: " + $P{PICO_MAXIMO} + " personas"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="290" y="42" width="255" height="12" uuid="12345678-1234-1234-1234-123456789ac6"/>
+					<textElement><font size="9"/></textElement>
+					<textFieldExpression><![CDATA["Porcentaje pico: " + String.format("%.1f", $P{PORCENTAJE_PICO}) + "%"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="290" y="58" width="255" height="12" uuid="12345678-1234-1234-1234-123456789ac7"/>
+					<textElement><font size="9"/></textElement>
+					<textFieldExpression><![CDATA[$P{HORA_PICO} != null ? "Hora pico: " + $P{HORA_PICO} : "Hora pico: —"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageHeader>
+
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="24" uuid="12345678-1234-1234-1234-123456789ac8"/>
+				<box>
+					<pen lineWidth="0.8"/>
+				</box>
+				<staticText>
+					<reportElement x="8" y="5" width="230" height="12" uuid="12345678-1234-1234-1234-123456789ac9"/>
+					<textElement><font size="9" isBold="true"/></textElement>
+					<text><![CDATA[Timestamp]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="246" y="5" width="85" height="12" uuid="12345678-1234-1234-1234-123456789aca"/>
+					<textElement textAlignment="Center"><font size="9" isBold="true"/></textElement>
+					<text><![CDATA[Personas]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="338" y="5" width="90" height="12" uuid="12345678-1234-1234-1234-123456789acb"/>
+					<textElement textAlignment="Center"><font size="9" isBold="true"/></textElement>
+					<text><![CDATA[Aforo Máx.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="435" y="5" width="110" height="12" uuid="12345678-1234-1234-1234-123456789acc"/>
+					<textElement textAlignment="Center"><font size="9" isBold="true"/></textElement>
+					<text><![CDATA[% Ocupación]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+
+	<detail>
+		<band height="22" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="555" height="22" uuid="12345678-1234-1234-1234-123456789acd"/>
+				<box>
+					<pen lineWidth="0.4"/>
+				</box>
+				<textField>
+					<reportElement x="8" y="4" width="230" height="12" uuid="12345678-1234-1234-1234-123456789ace"/>
+					<textElement><font size="8"/></textElement>
+					<textFieldExpression><![CDATA[String.valueOf($F{timestamp})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="246" y="4" width="85" height="12" uuid="12345678-1234-1234-1234-123456789acf"/>
+					<textElement textAlignment="Center"><font size="8"/></textElement>
+					<textFieldExpression><![CDATA[$F{personasAdentro}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="338" y="4" width="90" height="12" uuid="12345678-1234-1234-1234-123456789ad0"/>
+					<textElement textAlignment="Center"><font size="8"/></textElement>
+					<textFieldExpression><![CDATA[$F{aforoMaximo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="435" y="4" width="110" height="12" uuid="12345678-1234-1234-1234-123456789ad1"/>
+					<textElement textAlignment="Center"><font size="8"/></textElement>
+					<textFieldExpression><![CDATA[String.format("%.1f%%", $F{porcentaje})]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+
+	<pageFooter>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="2" width="300" height="12" uuid="12345678-1234-1234-1234-123456789ad2"/>
+				<textElement><font size="8"/></textElement>
+				<textFieldExpression><![CDATA["Generado por JasperReporter"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="2" width="100" height="12" uuid="12345678-1234-1234-1234-123456789ad3"/>
+				<textElement textAlignment="Right"><font size="8"/></textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
