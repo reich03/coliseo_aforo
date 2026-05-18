@@ -8,9 +8,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-/**
- * Envía lecturas al API Gateway mediante HTTP POST.
- */
+
 public class GatewayClient {
 
     private final HttpClient httpClient;

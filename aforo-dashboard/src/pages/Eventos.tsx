@@ -51,12 +51,12 @@ export default function Eventos() {
 
       {/* Create form */}
       {showForm && (
-        <div className="rounded-xl p-6 mb-6" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-6 mb-6 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <div className="flex items-center gap-2 mb-5">
             <svg className="w-3.5 h-3.5 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
             <span className="text-[10px] font-bold uppercase tracking-widest text-green-400">Nuevo Evento</span>
           </div>
-          <form onSubmit={handleCrear} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+          <form onSubmit={handleCrear} className="grid items-end grid-cols-1 gap-4 md:grid-cols-3">
             <div>
               <label className="text-[#3a5a3a] text-[10px] uppercase tracking-widest block mb-2">Nombre del evento</label>
               <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Concierto Fonseca 2026"
@@ -91,8 +91,7 @@ export default function Eventos() {
         </div>
       </div>
 
-      {/* Cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {filtered.length === 0 && (
           <p className="text-[#2a3a2a] text-xs uppercase tracking-widest col-span-full text-center py-16">
             No hay eventos registrados

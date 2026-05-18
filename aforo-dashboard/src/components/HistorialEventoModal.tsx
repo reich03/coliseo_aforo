@@ -91,7 +91,7 @@ export default function HistorialEventoModal({ evento, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div className="bg-gray-900 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl">
@@ -127,22 +127,22 @@ export default function HistorialEventoModal({ evento, onClose }: Props) {
 
           {/* Fechas */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-800 rounded-xl p-4">
-              <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Inicio</p>
-              <p className="text-white text-sm font-medium">{fmt(evento.fechaInicio)}</p>
+            <div className="p-4 bg-gray-800 rounded-xl">
+              <p className="mb-1 text-xs tracking-widest text-gray-400 uppercase">Inicio</p>
+              <p className="text-sm font-medium text-white">{fmt(evento.fechaInicio)}</p>
             </div>
-            <div className="bg-gray-800 rounded-xl p-4">
-              <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">Fin</p>
-              <p className="text-white text-sm font-medium">{fmt(evento.fechaFin)}</p>
+            <div className="p-4 bg-gray-800 rounded-xl">
+              <p className="mb-1 text-xs tracking-widest text-gray-400 uppercase">Fin</p>
+              <p className="text-sm font-medium text-white">{fmt(evento.fechaFin)}</p>
             </div>
           </div>
 
           {loading && (
-            <p className="text-gray-400 text-sm text-center py-8">Cargando datos del historial…</p>
+            <p className="py-8 text-sm text-center text-gray-400">Cargando datos del historial…</p>
           )}
 
           {error && (
-            <p className="text-red-400 text-sm text-center py-8">
+            <p className="py-8 text-sm text-center text-red-400">
               No se pudo cargar el historial. Verifica que reportes-ms esté activo.
             </p>
           )}
@@ -150,7 +150,7 @@ export default function HistorialEventoModal({ evento, onClose }: Props) {
           {!loading && !error && (
             <>
               {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
                 <StatCard label="Registros" value={resumen?.totalRegistros ?? 0} />
                 <StatCard
                   label="Pico máximo"
@@ -169,14 +169,14 @@ export default function HistorialEventoModal({ evento, onClose }: Props) {
 
               {/* Promedio */}
               {promedio !== null && (
-                <div className="bg-gray-800 rounded-xl p-4 flex items-center justify-between">
+                <div className="flex items-center justify-between p-4 bg-gray-800 rounded-xl">
                   <div>
-                    <p className="text-gray-400 text-xs uppercase tracking-widest">
+                    <p className="text-xs tracking-widest text-gray-400 uppercase">
                       Promedio de ocupación
                     </p>
                     <p className="text-white text-2xl font-bold mt-0.5">
                       {promedio}{' '}
-                      <span className="text-gray-400 text-base font-normal">personas</span>
+                      <span className="text-base font-normal text-gray-400">personas</span>
                     </p>
                   </div>
                   {promedioPct !== null && (
@@ -189,18 +189,18 @@ export default function HistorialEventoModal({ evento, onClose }: Props) {
 
               {/* Hora pico */}
               {resumen?.horaPico && (
-                <div className="bg-gray-800 rounded-xl p-4">
-                  <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">
+                <div className="p-4 bg-gray-800 rounded-xl">
+                  <p className="mb-1 text-xs tracking-widest text-gray-400 uppercase">
                     Hora del pico máximo
                   </p>
-                  <p className="text-white text-sm font-medium">{fmt(resumen.horaPico)}</p>
+                  <p className="text-sm font-medium text-white">{fmt(resumen.horaPico)}</p>
                 </div>
               )}
 
               {/* Gráfica */}
               {chartData.length > 0 ? (
-                <div className="bg-gray-800 rounded-xl p-5">
-                  <p className="text-gray-400 text-xs uppercase tracking-widest mb-3">
+                <div className="p-5 bg-gray-800 rounded-xl">
+                  <p className="mb-3 text-xs tracking-widest text-gray-400 uppercase">
                     Flujo de personas durante el evento
                   </p>
                   <ResponsiveContainer width="100%" height={200}>
@@ -224,25 +224,24 @@ export default function HistorialEventoModal({ evento, onClose }: Props) {
                   </ResponsiveContainer>
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm text-center py-4">
+                <p className="py-4 text-sm text-center text-gray-500">
                   Sin datos de flujo registrados para este evento.
                 </p>
               )}
 
-              {/* Exportar */}
               {resumen && resumen.totalRegistros > 0 && (
                 <div className="flex gap-3 pt-1">
                   <button
                     onClick={handlePdf}
                     disabled={exporting !== null}
-                    className="flex-1 bg-red-700 hover:bg-red-600 disabled:opacity-50 text-white text-sm rounded-lg py-2 transition-colors"
+                    className="flex-1 py-2 text-sm text-white transition-colors bg-red-700 rounded-lg hover:bg-red-600 disabled:opacity-50"
                   >
                     {exporting === 'pdf' ? 'Generando…' : '📄 Descargar PDF'}
                   </button>
                   <button
                     onClick={handleExcel}
                     disabled={exporting !== null}
-                    className="flex-1 bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50 text-white text-sm rounded-lg py-2 transition-colors"
+                    className="flex-1 py-2 text-sm text-white transition-colors rounded-lg bg-emerald-700 hover:bg-emerald-600 disabled:opacity-50"
                   >
                     {exporting === 'excel' ? 'Generando…' : '📊 Descargar Excel'}
                   </button>
@@ -266,8 +265,8 @@ function StatCard({
   valueClass?: string
 }) {
   return (
-    <div className="bg-gray-800 rounded-xl p-4 text-center">
-      <p className="text-gray-400 text-xs uppercase tracking-widest mb-1">{label}</p>
+    <div className="p-4 text-center bg-gray-800 rounded-xl">
+      <p className="mb-1 text-xs tracking-widest text-gray-400 uppercase">{label}</p>
       <p className={`text-white text-lg font-bold ${valueClass}`}>{value}</p>
     </div>
   )

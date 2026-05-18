@@ -19,7 +19,7 @@ function pctBadge(pct: number) {
 
 function Stat({ label, value, sub, accent }: { label: string; value: string; sub?: string; accent?: string }) {
   return (
-    <div className="rounded-xl p-5" style={{ background: '#0a120a', border: '1px solid #152015' }}>
+    <div className="p-5 rounded-xl" style={{ background: '#0a120a', border: '1px solid #152015' }}>
       <p className="text-[9px] uppercase tracking-widest text-[#2a3a2a] mb-2">{label}</p>
       <p className="text-2xl font-bold tabular-nums" style={{ color: accent ?? '#ffffff' }}>{value}</p>
       {sub && <p className="text-[10px] text-[#3a5a3a] mt-0.5">{sub}</p>}
@@ -51,7 +51,6 @@ export default function EventoDetalle() {
     }).finally(() => setLoading(false))
   }, [id])
 
-  /* Chart: group by 15-min buckets */
   const chartData = useMemo(() => {
     if (grafica.length < 2) return []
     const step = Math.max(1, Math.floor(grafica.length / 60))
@@ -63,7 +62,6 @@ export default function EventoDetalle() {
       }))
   }, [grafica])
 
-  /* Avg occupancy */
   const promedio = grafica.length > 0
     ? parseFloat((grafica.reduce((a, r) => a + r.personasAdentro, 0) / grafica.length).toFixed(1))
     : null
@@ -71,7 +69,6 @@ export default function EventoDetalle() {
     ? parseFloat(((promedio / evento.aforoMaximo) * 100).toFixed(1))
     : null
 
-  /* Operative log: first record + peak */
   const logItems = useMemo(() => {
     const items: { time: string; label: string; sub: string }[] = []
     if (evento?.fechaInicio) items.push({ time: fmt(evento.fechaInicio), label: 'Apertura de puertas', sub: 'Inicio del conteo' })
@@ -80,7 +77,6 @@ export default function EventoDetalle() {
     return items
   }, [evento, resumen])
 
-  /* Trend analysis */
   const tendencia = useMemo(() => {
     if (grafica.length < 4) return null
     const last = grafica.slice(-Math.min(10, grafica.length))
@@ -121,36 +117,33 @@ export default function EventoDetalle() {
 
   return (
     <Layout headerRight={headerRight}>
-      {/* Back button */}
       <button onClick={() => navigate('/eventos')} className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-[#3a5a3a] hover:text-green-400 mb-6 transition-colors">
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 19l-7-7 7-7" strokeWidth={2} strokeLinecap="round"/></svg>
         Volver a Eventos
       </button>
 
-      {/* Title */}
-      <div className="flex items-center gap-3 mb-2 flex-wrap">
+      <div className="flex flex-wrap items-center gap-3 mb-2">
         {evento && <span className={`text-[9px] px-2.5 py-1 rounded-full border uppercase tracking-widest font-medium ${estadoBadge}`}>{evento.estado}</span>}
         {badge && <span className={`text-[9px] px-2.5 py-1 rounded-full border uppercase tracking-widest font-medium ${badge.cls}`}>{badge.label}</span>}
         {evento && <span className="text-[9px] text-[#3a5a3a] uppercase tracking-widest">Aforo máx: {evento.aforoMaximo.toLocaleString()}</span>}
       </div>
-      <h1 className="text-3xl font-bold text-white mb-1">{evento?.nombre ?? '—'}</h1>
+      <h1 className="mb-1 text-3xl font-bold text-white">{evento?.nombre ?? '—'}</h1>
       <p className="text-[#3a5a3a] text-xs mb-8">Reporte detallado de afluencia y métricas operativas</p>
 
-      {/* Dates */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="rounded-xl p-5" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-5 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <div className="flex items-center gap-2 mb-2">
             <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" strokeWidth={2}/></svg>
             <p className="text-[9px] uppercase tracking-widest text-[#3a5a3a]">Inicio de Evento</p>
           </div>
-          <p className="text-white font-semibold text-sm">{fmt(evento?.fechaInicio ?? null)}</p>
+          <p className="text-sm font-semibold text-white">{fmt(evento?.fechaInicio ?? null)}</p>
         </div>
-        <div className="rounded-xl p-5" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-5 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <div className="flex items-center gap-2 mb-2">
             <svg className="w-4 h-4 text-[#3a5a3a]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeWidth={2}/></svg>
             <p className="text-[9px] uppercase tracking-widest text-[#3a5a3a]">Fin de Evento</p>
           </div>
-          <p className="text-white font-semibold text-sm">{fmt(evento?.fechaFin ?? null)}</p>
+          <p className="text-sm font-semibold text-white">{fmt(evento?.fechaFin ?? null)}</p>
         </div>
       </div>
 
@@ -165,18 +158,18 @@ export default function EventoDetalle() {
       {/* Analysis + Chart */}
       <div className="grid grid-cols-2 gap-5 mb-6">
         {/* Occupancy analysis */}
-        <div className="rounded-xl p-6" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-6 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <p className="text-[9px] uppercase tracking-widest text-[#2a3a2a] mb-4">Análisis de Ocupación</p>
           {promedio !== null ? (
             <>
-              <p className="text-4xl font-bold text-white mb-1">{promedio}</p>
+              <p className="mb-1 text-4xl font-bold text-white">{promedio}</p>
               <p className="text-[#3a5a3a] text-xs mb-4">personas</p>
               <div className="w-full rounded-full h-1.5 mb-4" style={{ background: '#1a2a1a' }}>
                 <div className="h-1.5 rounded-full" style={{ width: `${Math.min(promedioPct ?? 0, 100)}%`, background: '#22c55e' }} />
               </div>
               <p className="text-[10px] text-[#3a5a3a]">
                 El promedio de ocupación se mantiene en un nivel{' '}
-                <span className="text-green-400 font-medium uppercase">
+                <span className="font-medium text-green-400 uppercase">
                   {(promedioPct ?? 0) >= 80 ? 'alto' : (promedioPct ?? 0) >= 50 ? 'medio' : 'óptimo'} ({promedioPct}%)
                 </span>{' '}
                 con respecto al aforo máximo de {evento?.aforoMaximo.toLocaleString()}.
@@ -184,7 +177,7 @@ export default function EventoDetalle() {
               {resumen?.horaPico && (
                 <div className="mt-5 pt-4 border-t border-[#152015]">
                   <p className="text-[9px] uppercase tracking-widest text-[#2a3a2a] mb-1">Hora del Pico Máximo</p>
-                  <p className="text-green-400 text-sm font-semibold">{fmt(resumen.horaPico)}</p>
+                  <p className="text-sm font-semibold text-green-400">{fmt(resumen.horaPico)}</p>
                 </div>
               )}
             </>
@@ -194,7 +187,7 @@ export default function EventoDetalle() {
         </div>
 
         {/* Flow chart */}
-        <div className="rounded-xl p-6" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-6 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <p className="text-[9px] uppercase tracking-widest text-[#2a3a2a] mb-1">Flujo de Personas Durante el Evento</p>
           <p className="text-[9px] text-[#1a2a1a] mb-4">Monitoreo en tiempo real · Última actualización 1 min atrás</p>
           {chartData.length > 0 ? (
@@ -216,7 +209,7 @@ export default function EventoDetalle() {
       {/* Operative log + trend */}
       <div className="grid grid-cols-2 gap-5">
         {/* Operative log */}
-        <div className="rounded-xl p-6" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-6 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <p className="text-[9px] uppercase tracking-widest text-[#2a3a2a] mb-4">Registro Operativo</p>
           <div className="space-y-4">
             {logItems.length === 0 && <p className="text-[#2a3a2a] text-xs">Sin registros operativos.</p>}
@@ -224,7 +217,7 @@ export default function EventoDetalle() {
               <div key={i} className="flex items-start gap-3">
                 <span className="w-2 h-2 rounded-full bg-green-500 mt-1.5 shrink-0" />
                 <div>
-                  <p className="text-white text-xs font-medium">{item.label}</p>
+                  <p className="text-xs font-medium text-white">{item.label}</p>
                   <p className="text-[10px] text-[#3a5a3a]">{item.time} · {item.sub}</p>
                 </div>
               </div>
@@ -232,9 +225,8 @@ export default function EventoDetalle() {
           </div>
         </div>
 
-        {/* Trend analysis */}
-        <div className="rounded-xl p-6 flex flex-col items-center justify-center text-center" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-4" style={{ background: '#0a120a', border: '1px solid #152015' }}>
+        <div className="flex flex-col items-center justify-center p-6 text-center rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+          <div className="flex items-center justify-center mb-4 w-14 h-14 rounded-xl" style={{ background: '#0a120a', border: '1px solid #152015' }}>
             <svg className="w-7 h-7 text-[#2a3a2a]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeWidth={2}/></svg>
           </div>
           <p className="text-[9px] uppercase tracking-widest text-[#2a3a2a] mb-3">Análisis de Tendencia</p>

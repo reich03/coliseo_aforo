@@ -129,12 +129,11 @@ export default function Admin() {
 
   return (
     <Layout title="Panel de Administración" subtitle="Gestión de operadores y accesos">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
-        {/* ── Lista de usuarios ── */}
-        <div className="lg:col-span-2 rounded-xl p-5" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="p-5 lg:col-span-2 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-lg">Operadores registrados</h2>
+            <h2 className="text-lg font-semibold">Operadores registrados</h2>
             <button
               onClick={cargarUsuarios}
               className="text-xs text-gray-400 hover:text-white bg-gray-700 px-3 py-1.5 rounded-lg"
@@ -144,19 +143,19 @@ export default function Admin() {
           </div>
 
           {loading ? (
-            <p className="text-gray-500 text-sm animate-pulse">Cargando operadores…</p>
+            <p className="text-sm text-gray-500 animate-pulse">Cargando operadores…</p>
           ) : usuarios.length === 0 ? (
-            <p className="text-gray-500 text-sm">No hay usuarios registrados.</p>
+            <p className="text-sm text-gray-500">No hay usuarios registrados.</p>
           ) : (
             <div className="space-y-3">
               {usuarios.map(user => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between rounded-lg px-4 py-3"
+                  className="flex items-center justify-between px-4 py-3 rounded-lg"
                   style={{ background: '#0a120a', border: '1px solid #152015' }}
                 >
                   <div>
-                    <p className="font-medium text-sm flex items-center gap-2">
+                    <p className="flex items-center gap-2 text-sm font-medium">
                       {user.username}
                       {user.username === 'admin' && (
                         <span className="text-xs bg-indigo-800 text-indigo-200 rounded px-1.5 py-0.5">
@@ -164,7 +163,7 @@ export default function Admin() {
                         </span>
                       )}
                     </p>
-                    <p className="text-gray-400 text-xs">{user.email}</p>
+                    <p className="text-xs text-gray-400">{user.email}</p>
                     <p className="text-xs mt-0.5">
                       <span
                         className={`inline-block rounded px-1.5 py-0.5 font-medium ${
@@ -198,8 +197,8 @@ export default function Admin() {
         </div>
 
         {/* ── Crear nuevo operador ── */}
-        <div className="rounded-xl p-5 self-start" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
-          <h2 className="font-semibold text-lg mb-4">Nuevo operador</h2>
+        <div className="self-start p-5 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+          <h2 className="mb-4 text-lg font-semibold">Nuevo operador</h2>
 
           <form onSubmit={handleCrear} className="space-y-4">
 

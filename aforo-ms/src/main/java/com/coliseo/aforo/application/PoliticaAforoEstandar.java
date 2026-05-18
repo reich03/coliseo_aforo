@@ -8,12 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/**
- * GRASP Protected Variations — implementación estándar de {@link IPoliticaAforo}.
- *
- * Para un evento especial (concierto VIP, zona pista) se crea otra implementación
- * sin modificar esta clase ni {@link AlertaService}.
- */
+
 @Component
 public class PoliticaAforoEstandar implements IPoliticaAforo {
 
