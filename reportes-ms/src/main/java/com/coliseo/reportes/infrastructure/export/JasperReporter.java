@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Component;
-
 import com.coliseo.reportes.application.port.ReporteExporterPort;
 import com.coliseo.reportes.application.port.ReportePdfData;
 import com.coliseo.reportes.domain.RegistroHistorico;
@@ -16,7 +14,6 @@ import com.coliseo.reportes.infrastructure.service.JasperService;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
-@Component
 public class JasperReporter implements ReporteExporterPort {
 
     private final JasperService jasperService;
