@@ -4,13 +4,15 @@ import com.coliseo.aforo.application.dto.AforoResponseDto;
 import com.coliseo.aforo.application.dto.LecturaRequestDto;
 import com.coliseo.aforo.application.port.IAforoRepository;
 import com.coliseo.aforo.domain.Aforo;
-import com.coliseo.aforo.domain.EstadoAforo;
 import com.coliseo.aforo.domain.Lectura;
 import com.coliseo.aforo.domain.TipoLectura;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -20,26 +22,51 @@ public class AforoService {
 
     private final IAforoRepository aforoRepository;
     private final AlertaService alertaService;
+    private final RestTemplate restTemplate;
+
+    @Value("${eventos.ms.url:http://localhost:8082}")
+    private String eventosMsUrl;
 
     public AforoService(IAforoRepository aforoRepository,
-                        AlertaService alertaService) {
+                        AlertaService alertaService,
+                        RestTemplate restTemplate) {
         this.aforoRepository = aforoRepository;
         this.alertaService = alertaService;
+        this.restTemplate = restTemplate;
     }
 
-    /**
-     * Registra una lectura del sensor (ENTRADA o SALIDA).
-     *
-     * @param dto datos enviados por el Arduino Agent
-     * @return estado actualizado del aforo
-     */
+    private UUID obtenerEventoActivoId() {
+        try {
+            Map<?, ?> evento = restTemplate.getForObject(eventosMsUrl + "/eventos/activo", Map.class);
+            if (evento != null && evento.get("id") != null) {
+                return UUID.fromString(evento.get("id").toString());
+            }
+        } catch (Exception e) {
+            System.out.println("[AforoService] No se pudo obtener evento activo: " + e.getMessage());
+        }
+        return UUID.fromString("00000000-0000-0000-0000-000000000001");
+    }
+
+    private int obtenerAforoMaximoEvento() {
+        try {
+            Map<?, ?> evento = restTemplate.getForObject(eventosMsUrl + "/eventos/activo", Map.class);
+            if (evento != null && evento.get("aforoMaximo") != null) {
+                return Integer.parseInt(evento.get("aforoMaximo").toString());
+            }
+        } catch (Exception e) {
+            // silencioso
+        }
+        return 1000;
+    }
+
+    
     public AforoResponseDto registrarLectura(LecturaRequestDto dto) {
-        UUID eventoId = dto.getEventoId() != null ? dto.getEventoId() : UUID.fromString("00000000-0000-0000-0000-000000000001");
+        UUID eventoId = dto.getEventoId() != null ? dto.getEventoId() : obtenerEventoActivoId();
 
         Aforo aforo = aforoRepository.findByEventoId(eventoId)
                 .orElseGet(() -> {
                     int capacidad = (dto.getAforoMaximo() != null && dto.getAforoMaximo() > 0)
-                            ? dto.getAforoMaximo() : 1000;
+                            ? dto.getAforoMaximo() : obtenerAforoMaximoEvento();
                     Aforo nuevo = new Aforo(UUID.randomUUID(), capacidad, eventoId);
                     return aforoRepository.save(nuevo);
                 });

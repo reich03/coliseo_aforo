@@ -4,8 +4,7 @@ import com.coliseo.reportes.application.ReporteService;
 import com.coliseo.reportes.application.port.DefaultReportePdfData;
 import com.coliseo.reportes.domain.RegistroHistorico;
 import com.coliseo.reportes.domain.ResumenEvento;
-import com.coliseo.reportes.infrastructure.export.ExcelExporter;
-import com.coliseo.reportes.infrastructure.export.JasperReporter;
+import com.coliseo.reportes.application.port.ReporteExporterPort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpHeaders;
@@ -22,15 +21,12 @@ import java.util.UUID;
 public class ReporteController {
 
     private final ReporteService reporteService;
-    private final JasperReporter jasperReporter;
-    private final ExcelExporter excelExporter;
+    private final java.util.List<ReporteExporterPort> exporters;
 
     public ReporteController(ReporteService reporteService,
-                              JasperReporter jasperReporter,
-                              ExcelExporter excelExporter) {
+                              java.util.List<ReporteExporterPort> exporters) {
         this.reporteService = reporteService;
-        this.jasperReporter = jasperReporter;
-        this.excelExporter = excelExporter;
+        this.exporters = exporters;
     }
 
     @GetMapping("/evento/{eventoId}")
@@ -50,7 +46,7 @@ public class ReporteController {
     public ResponseEntity<byte[]> pdf(@PathVariable UUID eventoId) throws java.io.IOException {
         ResumenEvento resumen = reporteService.calcularResumen(eventoId);
         List<RegistroHistorico> historial = reporteService.obtenerHistorial(eventoId);
-        byte[] bytes = jasperReporter.exportar(new DefaultReportePdfData(resumen, historial));
+        byte[] bytes = findExporterByFormat("PDF").exportar(new DefaultReportePdfData(resumen, historial));
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + eventoId + ".pdf")
@@ -63,7 +59,7 @@ public class ReporteController {
     public ResponseEntity<byte[]> excel(@PathVariable UUID eventoId) throws java.io.IOException {
         ResumenEvento resumen = reporteService.calcularResumen(eventoId);
         List<RegistroHistorico> historial = reporteService.obtenerHistorial(eventoId);
-        byte[] bytes = excelExporter.exportar(new DefaultReportePdfData(resumen, historial));
+        byte[] bytes = findExporterByFormat("XLSX").exportar(new DefaultReportePdfData(resumen, historial));
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=reporte-" + eventoId + ".xlsx")
@@ -77,5 +73,12 @@ public class ReporteController {
             @RequestParam int personasAdentro,
             @RequestParam int aforoMaximo) {
         return ResponseEntity.ok(reporteService.guardarRegistro(eventoId, personasAdentro, aforoMaximo));
+    }
+
+    private ReporteExporterPort findExporterByFormat(String format) {
+        return exporters.stream()
+                .filter(e -> e.getFormat() != null && e.getFormat().equalsIgnoreCase(format))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No exporter found for format: " + format));
     }
 }

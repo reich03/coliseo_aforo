@@ -11,7 +11,6 @@ import SimuladorSensor from '../components/SimuladorSensor'
 import Layout from '../components/Layout'
 import { Evento, RegistroHistorico } from '../types'
 
-/* ── Circular Gauge ── */
 function CircularGauge({ personas, max, pct, estado }: { personas: number; max: number; pct: number; estado: string }) {
   const r = 42
   const circ = 2 * Math.PI * r
@@ -29,7 +28,6 @@ function CircularGauge({ personas, max, pct, estado }: { personas: number; max: 
   )
 }
 
-/* ── Semáforo ── */
 function SemaforoPanel({ estado }: { estado: string }) {
   const cfg = {
     LIBRE:  { label: 'Aforo Libre',   sub: 'Entrada permitida. Flujo estable.', icon: '✓', bg: 'rgba(34,197,94,0.15)', border: 'rgba(34,197,94,0.3)', color: '#22c55e' },
@@ -38,24 +36,23 @@ function SemaforoPanel({ estado }: { estado: string }) {
   }[estado] ?? { label: 'Sin datos', sub: '', icon: '?', bg: 'rgba(100,100,100,0.1)', border: 'rgba(100,100,100,0.2)', color: '#6b7280' }
 
   return (
-    <div className="rounded-xl p-5 h-full flex flex-col items-center justify-center gap-4" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+    <div className="flex flex-col items-center justify-center h-full gap-4 p-5 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
       <p className="text-[9px] uppercase tracking-widest text-[#3a5a3a]">Sistema de Semáforo</p>
-      <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold transition-all"
+      <div className="flex items-center justify-center w-20 h-20 text-3xl font-bold transition-all rounded-full"
         style={{ background: cfg.bg, border: `2px solid ${cfg.border}`, color: cfg.color, boxShadow: `0 0 30px ${cfg.bg}` }}>
         {cfg.icon}
       </div>
       <div className="text-center">
-        <p className="font-bold text-sm" style={{ color: cfg.color }}>{cfg.label}</p>
+        <p className="text-sm font-bold" style={{ color: cfg.color }}>{cfg.label}</p>
         <p className="text-[10px] text-[#4a6a4a] mt-0.5">{cfg.sub}</p>
       </div>
     </div>
   )
 }
 
-/* ── Stat Card ── */
 function StatCard({ label, value, delta }: { label: string; value: string; delta?: string }) {
   return (
-    <div className="rounded-xl p-5" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+    <div className="p-5 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
       <p className="text-[9px] uppercase tracking-widest text-[#3a5a3a] mb-2">{label}</p>
       <p className="text-2xl font-bold text-white tabular-nums">{value}</p>
       {delta && <p className="text-[10px] text-green-500 mt-1">▲ {delta}</p>}
@@ -63,7 +60,6 @@ function StatCard({ label, value, delta }: { label: string; value: string; delta
   )
 }
 
-/* ── Dashboard ── */
 export default function Dashboard() {
   useAforoSocket()
 
@@ -89,7 +85,6 @@ export default function Dashboard() {
     getGrafica(id).then(setHistorial).catch(() => setHistorial([]))
   }, [eventoActivo, setAforo])
 
-  /* Flow chart: entries/exits aggregated by 15-min intervals */
   const chartData = useMemo(() => {
     if (historial.length < 2) return []
     const buckets: Record<string, { t: string; entradas: number; salidas: number }> = {}
@@ -105,7 +100,6 @@ export default function Dashboard() {
     return Object.values(buckets).sort((a, b) => a.t.localeCompare(b.t))
   }, [historial])
 
-  /* Running totals from historial */
   useEffect(() => {
     if (historial.length < 2) return
     let e = 0; let s = 0
@@ -141,7 +135,7 @@ export default function Dashboard() {
         </div>
       )}
       <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px]" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
-        <span className="text-white font-medium">{isAdmin ? 'Administrador' : 'Operador'} {username}</span>
+        <span className="font-medium text-white">{isAdmin ? 'Administrador' : 'Operador'} {username}</span>
         <span className="text-[#22c55e] text-[8px] uppercase tracking-widest border border-green-500/30 rounded px-1">Verificado UNILLANOS</span>
       </div>
       {eventoActivo && (
@@ -164,16 +158,14 @@ export default function Dashboard() {
       <AlertaBanner />
 
       {sinEvento && (
-        <div className="mb-5 flex items-center gap-3 px-4 py-3 rounded-xl text-xs" style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.2)', color: '#eab308' }}>
+        <div className="flex items-center gap-3 px-4 py-3 mb-5 text-xs rounded-xl" style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.2)', color: '#eab308' }}>
           <span>⚠</span>
           <span>No hay evento activo. <a href="/eventos" className="underline">Ir a Eventos</a> para activar uno.</span>
         </div>
       )}
 
-      {/* Row 1: gauge + semáforo */}
       <div className="grid grid-cols-3 gap-5 mb-5">
-        {/* Gauge panel */}
-        <div className="col-span-2 rounded-xl p-6" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="col-span-2 p-6 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <div className="flex items-start gap-8">
             <CircularGauge personas={personas} max={max} pct={pct} estado={estado} />
             <div className="flex-1 pt-1">
@@ -183,17 +175,17 @@ export default function Dashboard() {
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                     Monitor en Vivo
                   </span>
-                  <p className="text-white text-sm font-semibold mt-1 truncate">{eventoActivo.nombre}</p>
+                  <p className="mt-1 text-sm font-semibold text-white truncate">{eventoActivo.nombre}</p>
                 </div>
               )}
               <p className="text-[10px] uppercase tracking-widest text-[#3a5a3a] mb-1">Estado de Capacidad</p>
-              <h2 className="text-2xl font-bold text-white mb-4">Capacidad Actual</h2>
-              <div className="mb-2 flex items-center justify-between">
+              <h2 className="mb-4 text-2xl font-bold text-white">Capacidad Actual</h2>
+              <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] uppercase tracking-widest text-[#3a5a3a]">Carga de Ocupación</span>
                 <span className="text-sm font-bold" style={{ color: barColor }}>{pct.toFixed(1)}%</span>
               </div>
-              <div className="w-full rounded-full h-2 mb-4" style={{ background: '#1a2a1a' }}>
-                <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${Math.min(pct, 100)}%`, background: barColor }} />
+              <div className="w-full h-2 mb-4 rounded-full" style={{ background: '#1a2a1a' }}>
+                <div className="h-2 transition-all duration-500 rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: barColor }} />
               </div>
               <p className="text-[10px] text-[#3a5a3a] leading-relaxed">
                 El sistema monitorea constantemente las entradas y salidas para garantizar la seguridad del recinto.
@@ -201,11 +193,9 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {/* Semáforo */}
         <SemaforoPanel estado={estado} />
       </div>
 
-      {/* Row 2: simulador + flow chart */}
       <div className="grid grid-cols-3 gap-5 mb-5">
         {eventoActivo ? (
           <SimuladorSensor
@@ -220,8 +210,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Flow over time */}
-        <div className="col-span-2 rounded-xl p-5" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+        <div className="col-span-2 p-5 rounded-xl" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
           <p className="text-[9px] uppercase tracking-widest text-[#3a5a3a] mb-1">Flujo en el Tiempo</p>
           <p className="text-[9px] text-[#2a3a2a] mb-4">Entradas vs Salidas por hora</p>
           {chartData.length > 0 ? (
@@ -242,7 +231,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats row */}
       <div className="grid grid-cols-4 gap-5">
         <StatCard label="Total Entradas" value={totalEntradas.toLocaleString()} delta={totalEntradas > 0 ? `+${Math.round((totalEntradas / Math.max(max, 1)) * 100)}%` : undefined} />
         <StatCard label="Total Salidas"  value={totalSalidas.toLocaleString()} delta={totalSalidas > 0 ? `+${Math.round((totalSalidas / Math.max(totalEntradas, 1)) * 100)}%` : undefined} />

@@ -23,7 +23,6 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path=/usuarios/**
-        # WebSocket route para Aforo MS
         - id: aforo-ws
           uri: ws://localhost:8081
           predicates:

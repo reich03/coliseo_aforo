@@ -21,7 +21,6 @@ export default function EventoCard({ evento, onRefresh }: Props) {
   const aforoActivo = useAforoStore((s) => s.aforo)
   const [resumen, setResumen] = useState<ResumenEvento | null>(null)
 
-  // Fetch peak stats for non-PROGRAMADO events
   useEffect(() => {
     if (evento.estado === 'PROGRAMADO') return
     getResumen(evento.id).then(setResumen).catch(() => {})
@@ -74,9 +73,9 @@ export default function EventoCard({ evento, onRefresh }: Props) {
   }
 
   return (
-    <div className="rounded-xl p-5 flex flex-col gap-3 transition-all hover:border-green-500/20" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
+    <div className="flex flex-col gap-3 p-5 transition-all rounded-xl hover:border-green-500/20" style={{ background: '#0d150d', border: '1px solid #1a2a1a' }}>
       <div className="flex items-start justify-between gap-2">
-        <h3 className="font-bold text-sm text-white leading-tight">{evento.nombre}</h3>
+        <h3 className="text-sm font-bold leading-tight text-white">{evento.nombre}</h3>
         <span className={`shrink-0 flex items-center gap-1.5 text-[9px] px-2 py-1 rounded-full border uppercase tracking-widest font-medium ${badge.cls}`}>
           <span className={`w-1.5 h-1.5 rounded-full ${badge.dot}`} />
           {evento.estado}
@@ -85,7 +84,7 @@ export default function EventoCard({ evento, onRefresh }: Props) {
 
       <p className="text-[10px] text-[#3a5a3a] uppercase tracking-widest">
         Aforo {evento.estado === 'PROGRAMADO' ? 'proyectado' : 'máximo'}:{' '}
-        <span className="text-white font-semibold">{evento.aforoMaximo.toLocaleString()}</span>
+        <span className="font-semibold text-white">{evento.aforoMaximo.toLocaleString()}</span>
       </p>
 
       {evento.estado !== 'PROGRAMADO' && (

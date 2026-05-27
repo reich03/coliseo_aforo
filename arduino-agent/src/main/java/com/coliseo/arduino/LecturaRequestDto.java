@@ -1,13 +1,9 @@
 package com.coliseo.arduino;
 
-/**
- * GRASP Pure Fabrication: LecturaRequestDto existe únicamente como
- * facilitador de comunicación entre el Arduino Agent y el Backend.
- * No representa ninguna entidad del dominio del coliseo.
- */
+
 public class LecturaRequestDto {
 
-    private String tipo;         // "ENTRADA" o "SALIDA"
+    private String tipo;
     private Integer contadorArduino;
 
     public LecturaRequestDto() {}

@@ -6,14 +6,12 @@ import com.coliseo.reportes.domain.RegistroHistorico;
 import com.coliseo.reportes.domain.ResumenEvento;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 
-@Component
 public class ExcelExporter implements ReporteExporterPort {
 
     @Override

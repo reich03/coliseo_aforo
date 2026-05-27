@@ -5,10 +5,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-/**
- * GRASP Pure Fabrication: abstrae completamente la comunicación serial
- * con el hardware Arduino. No existe en el dominio del coliseo.
- */
+
 public class SerialReaderService implements AutoCloseable {
 
     private final SerialPort port;
@@ -25,9 +22,7 @@ public class SerialReaderService implements AutoCloseable {
         this.reader = new BufferedReader(new InputStreamReader(port.getInputStream()));
     }
 
-    /**
-     * Bloquea hasta leer una línea completa del Arduino.
-     */
+  
     public String leerMensaje() {
         try {
             return reader.readLine();
@@ -41,7 +36,7 @@ public class SerialReaderService implements AutoCloseable {
         if (port.isOpen()) port.closePort();
     }
 
-    // Utilidad: listar puertos disponibles en el sistema
+    
     public static void listarPuertos() {
         System.out.println("Puertos seriales disponibles:");
         for (SerialPort p : SerialPort.getCommPorts()) {

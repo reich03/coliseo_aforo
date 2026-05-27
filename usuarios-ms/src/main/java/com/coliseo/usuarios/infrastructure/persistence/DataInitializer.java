@@ -23,7 +23,9 @@ public class DataInitializer implements CommandLineRunner {
             admin.setEmail("admin@coliseo.co");
             admin.setActive(true);
             jpaRepository.save(admin);
-            System.out.println("[DataInitializer] Usuario creado → admin / admin123");
+            System.out.println("Si se creo admin / admin123");
+            System.out.println("paso por aqui");
+
         }
 
         if (jpaRepository.findByUsername("operador").isEmpty()) {
@@ -33,7 +35,8 @@ public class DataInitializer implements CommandLineRunner {
             op.setEmail("operador@coliseo.co");
             op.setActive(true);
             jpaRepository.save(op);
-            System.out.println("[DataInitializer] Usuario creado → operador / operador123");
+            System.out.println("Si se creo operador / operador123");
+            System.out.println("inicializo datos bien");
         }
     }
 }
